@@ -1,0 +1,97 @@
+.data {
+    background-color: #F5F7F8;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1rem;
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    color: gray;
+    list-style: none;
+}
+.li {
+    display: flex;
+    line-height: 1.rem;
+}
+
+.first-line-one {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    padding: 0;
+    font-size: 13px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.first-line-two {
+    font-size: 10px;
+    text-decoration: none;
+    color: gray;
+    margin-left: 4px;
+}
+.first-line-two:hover {
+    text-decoration: underline;
+}
+.second-line {
+    display: flex;
+    color: gray;
+    gap: 2px;
+    padding: 0;
+    font-size: 9px;
+    margin: 0;
+    padding-left: 30px;
+}
+
+.first-line {
+    box-sizing: border-box;
+    font-size: 13px;
+
+
+    
+}
+.second-line a {
+    text-decoration: none;
+    color: gray;
+}
+.second-line a:hover {
+    text-decoration: underline;
+}
+.image {
+    width: 11px;
+    height: 11px;
+    margin-top: 1.3px;
+    margin-right: 2px;
+
+}
+.button {
+
+    color: gray;
+    margin: 10px;
+    padding-left: 23px;
+    border: none;
+    display: flex;
+}
+@media screen and ( max-width: 900px) {
+    .data{
+        margin: 0;
+        width: 100%;
+        padding: 10px;
+        width: 100%;
+
+    }
+    .image {
+       margin-top: 2px; 
+    }
+    .button {
+        display: flex;
+
+    }
+    .first-line-one {
+        font-weight: 500;
+        font-family: verdana, tahoma, sans-serif;
+        font-size: 13px;
+    }
+    .second-line {
+        font-size: 11.8px;
+        
+    }
+}
