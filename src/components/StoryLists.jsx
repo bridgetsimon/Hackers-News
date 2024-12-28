@@ -9,15 +9,13 @@ function StoryLists() {
     const[currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [limit, setLimit] = useState (30)
+    const limit = 30;
 
     useEffect(() => {
         async function fetchData () {
           setLoading(true);
            try {
-            const getTopStories = await axios.get(' https://hacker-news.firebaseio.com/v0/topstories.json', {
-              params: {limit : 30}
-            });
+            const getTopStories = await axios.get(' https://hacker-news.firebaseio.com/v0/topstories.json');
             const topStoriesData = await getTopStories.data;
             const firstThirty = await topStoriesData.slice(0, 30);
       
@@ -27,7 +25,7 @@ function StoryLists() {
             
 
 
-            const storyData = topStoriesData.map(async (id) => {
+            const storyData = firstThirty.map(async (id) => {
                 const getStoryData = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json?`)
                 return await getStoryData.data;  
                 
@@ -47,14 +45,6 @@ function StoryLists() {
         
         
     },[currentPage]) ;
-
-    const currentPost = useMemo (() => {
-      const start = (currentPage - 1) * 30;
-      const end = start + limit;
-      const slicedStory = story.slice(start, end);
-      return slicedStory;
-
-    }, [currentPage, story])
 
     const handleLoadMore = () => {
       setCurrentPage(prevPage => prevPage + 1);
@@ -92,7 +82,7 @@ function StoryLists() {
   return (
     <>
     <ul className='data'>
-        {currentPost.map((stories, index) => {
+        {story.map((stories, index) => {
          
          let hostname;
          try{

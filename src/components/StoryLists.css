@@ -69,6 +69,7 @@
     padding-left: 23px;
     border: none;
     display: flex;
+    background-color: #F5F7F8;
 }
 @media screen and ( max-width: 900px) {
     .data{
