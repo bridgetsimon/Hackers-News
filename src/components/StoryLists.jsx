@@ -46,9 +46,6 @@ useEffect (() => {
 },[page, storyIds]) 
 
 const handleNextPage = () => {setPage((prevPage) => prevPage + 1) 
-  window.scrollTo({top: 0,
-    behavior: smooth
-  })
 }
 
 

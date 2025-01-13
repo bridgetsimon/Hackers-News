@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
-import StoryList from './components/StoryLists'
 import Footer from './components/Footer'
-import Post from './components/Post'
+import StoryLists from './components/StoryLists'
 
 function App() {
   return (
     <>
       <div className='app-container'>
         <Header/>  
-        <StoryList/>
+        <StoryLists/>
         <Footer/>
       </div>
     </>
