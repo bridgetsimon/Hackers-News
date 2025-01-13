@@ -1,108 +1,107 @@
-
-import { useEffect, useState, useMemo, useCallback } from 'react'
-import axios from 'axios'
+import axios from "axios";
+import React, { useEffect, useState } from 'react';
 import './StoryLists.css'
 
-function StoryLists() {
-    const [story, setStory] = useState([]);
-    const [error, setError] = useState(null);
-    const[currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const limit = 30;
-
-    useEffect(() => {
-        async function fetchData () {
-          setLoading(true);
-           try {
-            const getTopStories = await axios.get(' https://hacker-news.firebaseio.com/v0/topstories.json');
-            const topStoriesData = await getTopStories.data;
-            const firstThirty = await topStoriesData.slice(0, 30);
-      
-    
-            
-        
-            
 
 
-            const storyData = firstThirty.map(async (id) => {
-                const getStoryData = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json?`)
-                return await getStoryData.data;  
-                
-            })
-            const allStories = await Promise.all(storyData);
-            setStory(allStories);
-            console.log(allStories)
 
-            setTotalPages(totalPages)
-           }catch(error){
-            console.log('error fetching data');
-           }
+const StoryLists = () => {
+    const [storyIds, setStoryIds] = useState ([]);
+    const[stories, setStories] = useState([]);
+    const [page, setPage] = useState(1);
+    const storiesPerPage = 30;
 
-            
+
+
+useEffect(() => {
+    const fetchStoryIds = async () => {
+        try {
+        const response = await axios.get('https://hacker-news.firebaseio.com/v0/topstories.json');
+        setStoryIds(response.data);
+        }catch(erro){
+            console.log('error');
         }
-        fetchData(currentPage);
-        
-        
-    },[currentPage]) ;
-
-    const handleLoadMore = () => {
-      setCurrentPage(prevPage => prevPage + 1);
-      window.scrollTo({top: 0})
     };
 
-    const calculateMinutesAgo = (time) => {
-      const currentTime = Math.floor(Date.now() / 1000); 
-      const hoursAgo = Math.floor((currentTime - time) / 3600); 
-      const minutesAgo = Math.floor((currentTime - time) / 60);
-      
-  
+    fetchStoryIds();
+},[]);
+
+
+useEffect (() => {
+    const fetchStoriesForPage = async () => {
+        const start = (page - 1) * storiesPerPage;
+        const currentStoryIds = storyIds.slice(start, start + storiesPerPage);
+
+
+        const storyPromises = currentStoryIds.map((id) => axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json?`));
+
+        const storyResponses = await Promise.all(storyPromises);
+        console.log(storyResponses);
+        setStories(storyResponses.map((response) => response.data))
     };
-    
-    function formatTimeAgo (time) {
-      
-      const currentTime = Math.floor(Date.now() / 1000);
 
-      const minutesAgo = Math.floor((currentTime - time) / 60);
-      const hoursAgo = Math.floor((currentTime - time) / 3600); 
-      
-      
-
-
-      if (hoursAgo > 0) {
-        return`${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`; 
-      }else{
-        return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
-      }
+    if (storyIds.length > 0) {
+        fetchStoriesForPage();
     }
+},[page, storyIds]) 
 
+const handleNextPage = () => {setPage((prevPage) => prevPage + 1) 
+  window.scrollTo({top: 0,
+    behavior: smooth
+  })
+}
+
+
+  
+function formatTimeAgo (time) {
+      
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    const minutesAgo = Math.floor((currentTime - time) / 60);
+    const hoursAgo = Math.floor((currentTime - time) / 3600); 
     
+    
+
+
+    if (hoursAgo > 0) {
+      return`${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`; 
+    }else{
+      return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
+    }
+  }
 
 
   return (
     <>
-    <ul className='data'>
-        {story.map((stories, index) => {
+       <ul className="data">
+       {stories.map((story, index) => {
          
          let hostname;
          try{
-           hostname = new URL(stories.url).hostname;
+           hostname = new URL(story.url).hostname;
          }catch(error) { 
            hostname = 'invalid url';
          }
-     
-          return(
-          <>
-          <li key={stories.id} className='li'>{index + 1 + (currentPage - 1)* 30}.<img src='https://news.ycombinator.com/triangle.svg' className='image'/>
-         <div className='first-line'><a href={stories.url} className='first-line-one'>{stories.title}</a>
-          <a href={stories.url} className='first-line-two'>({hostname})</a></div>  </li> 
-            <div className='second-line'>{stories.score} points by<a href={stories.by} className='second-line-one'>{stories.by}</a>
-            <a href={stories.time} className='second-line-two'>{formatTimeAgo(stories.time)} </a>| 
-            <a href={stories.type} className='second-line-three'>hide</a> | <a href={stories.id}>{stories.descendants} comments</a></div></>
+
+         return (
+            <>
+             <li key={story.id} className='li'>{index + 1 + (page - 1)* 30}. <img src='https://news.ycombinator.com/triangle.svg' className='image'/>
+             <div className="lines">
+         <div className='first-line'><a href={story.url} className='first-line-one'>{story.title}</a>
+          <a href={story.url} className='first-line-two'>({hostname})</a></div>  
+            <div className='second-line'>{story.score} points by<a href={story.by} className='second-line-one'>{story.by}</a>
+            <a href={story.time} className='second-line-two'>{formatTimeAgo(story.time)} </a>| 
+            <a href={story.type} className='second-line-three'>hide</a> | <a href={story.id}>{story.descendants} comments</a>
+            </div>
+            </div> 
+            </li>
+            </>
           )})}
-        <button onClick={handleLoadMore} className='button'>More</button>
-    </ul>
+          <button onClick={handleNextPage} className="button">More</button>
+       </ul>
+       
     </>
   )
+
 }
-export default StoryLists
+export default StoryLists;

@@ -12,6 +12,13 @@
 .li {
     display: flex;
     line-height: 1.rem;
+    padding-left: 2px;
+    border: 1px solid black;
+
+}
+.lines {
+    display: flex;
+    flex-direction: column;
 }
 
 .first-line-one {
@@ -34,16 +41,15 @@
 .second-line {
     display: flex;
     color: gray;
-    gap: 2px;
     padding: 0;
     font-size: 9px;
     margin: 0;
-    padding-left: 30px;
 }
 
 .first-line {
     box-sizing: border-box;
     font-size: 13px;
+
 
 
     
@@ -67,6 +73,7 @@
     color: gray;
     margin: 10px;
     padding-left: 23px;
+    cursor: pointer;
     border: none;
     display: flex;
     background-color: #F5F7F8;
